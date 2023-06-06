@@ -21,7 +21,7 @@ public class MM01regist extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		HttpSession session = request.getSession();
-		System.out.println("regist");
+		
 		try {
 			String last_name = request.getParameter("last_name");
 			String first_name = request.getParameter("first_name");
