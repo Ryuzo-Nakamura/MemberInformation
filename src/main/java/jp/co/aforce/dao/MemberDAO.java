@@ -8,32 +8,30 @@ import jp.co.aforce.bean.Member;
 
 public class MemberDAO extends DAO{
 	
-	public int MM01S01(String last_name, String first_name, String gender,
-			String birth_year, String birth_month, String birth_day,
-			String phone_number, String mail_address, String job) throws Exception {
+	public int MM01S01(Member member) throws Exception {
 		
 		Connection con = getConnection();
 		
 		PreparedStatement st = con.prepareStatement(
 				"SELECT COUNT(*) FROM MEMBER_INFO "
-				+ "WHERE LAST_NAME = ?"
-				+ "AND FIRST_NAME = ?"
-				+ "AND GENDER = ?"
-				+ "AND BIRTH_YEAR = ?"
-				+ "AND BIRTH_MONTH = ?"
-				+ "AND BIRTH_DAY = ?"
-				+ "AND PHONE_NUMBER = ?"
-				+ "AND MAIL_ADDRESS = ?"
+				+ "WHERE LAST_NAME = ? "
+				+ "AND FIRST_NAME = ? "
+				+ "AND GENDER = ? "
+				+ "AND BIRTH_YEAR = ? "
+				+ "AND BIRTH_MONTH = ? "
+				+ "AND BIRTH_DAY = ? "
+				+ "AND PHONE_NUMBER = ? "
+				+ "AND MAIL_ADDRESS = ? "
 				+ "AND JOB = ?");
-		st.setString(1, last_name);
-		st.setString(2, first_name);
-		st.setString(3, gender);
-		st.setString(4, birth_year);
-		st.setString(5, birth_month);
-		st.setString(6, birth_day);
-		st.setString(7, phone_number);
-		st.setString(8, mail_address);
-		st.setString(9, job);
+		st.setString(1, member.getLastName());
+		st.setString(2, member.getFirstName());
+		st.setString(3, member.getGender());
+		st.setInt(4, member.getBirthYear());
+		st.setInt(5, member.getBirthMonth());
+		st.setInt(6, member.getBirthDay());
+		st.setString(7, member.getPhoneNumber());
+		st.setString(8, member.getMailAddress());
+		st.setString(9, member.getJob());
 		ResultSet rs = st.executeQuery();
 		rs.next();
 		int count = rs.getInt("COUNT(*)");
@@ -62,7 +60,7 @@ public class MemberDAO extends DAO{
 		return count;
 	}
 	
-public int MM01S03(String mail_address) throws Exception {
+	public int MM01S03(String mail_address) throws Exception {
 		
 		Connection con = getConnection();
 		
@@ -80,23 +78,21 @@ public int MM01S03(String mail_address) throws Exception {
 		return count;
 	}
 	
-	public int MM01I01(String member_id, String last_name, String first_name, String gender,
-			String birth_year, String birth_month, String birth_day,
-			String phone_number, String mail_address, String job) throws Exception{
+	public int MM01I01(Member member) throws Exception{
 		
 		Connection con = getConnection();
 
 		PreparedStatement st = con.prepareStatement("INSERT INTO MEMBER_INFO VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		st.setString(1, member_id);
-		st.setString(2, last_name);
-		st.setString(3, first_name);
-		st.setString(4, gender);
-		st.setInt(5, Integer.parseInt(birth_year));
-		st.setInt(6, Integer.parseInt(birth_month));
-		st.setInt(7, Integer.parseInt(birth_day));
-		st.setString(8, phone_number);
-		st.setString(9, mail_address);
-		st.setString(10, job);
+		st.setString(1, member.getMemberId());
+		st.setString(2, member.getLastName());
+		st.setString(3, member.getFirstName());
+		st.setString(4, member.getGender());
+		st.setInt(5, member.getBirthYear());
+		st.setInt(6, member.getBirthMonth());
+		st.setInt(7, member.getBirthDay());
+		st.setString(8, member.getPhoneNumber());
+		st.setString(9, member.getMailAddress());
+		st.setString(10, member.getJob());
 		int line = st.executeUpdate();
 
 		st.close();
@@ -154,9 +150,47 @@ public int MM01S03(String mail_address) throws Exception {
 		return member;
 	}
 	
-	public int MM02U01(String member_id, String last_name, String first_name, String gender,
-			String birth_year, String birth_month, String birth_day,
-			String phone_number, String mail_address, String job) throws Exception{
+public int MM02S03(String member_id, String phone_number) throws Exception {
+		
+		Connection con = getConnection();
+		
+		PreparedStatement st = con.prepareStatement(
+				"SELECT COUNT(*) FROM MEMBER_INFO "
+				+ "WHERE PHONE_NUMBER = ?"
+				+ "AND MEMBER_ID != ?");
+		st.setString(1, phone_number);
+		st.setString(2, member_id);
+		ResultSet rs = st.executeQuery();
+		rs.next();
+		int count = rs.getInt("COUNT(*)");
+		
+		st.close();
+		con.close();
+			
+		return count;
+	}
+	
+	public int MM02S04(String member_id, String mail_address) throws Exception {
+		
+		Connection con = getConnection();
+		
+		PreparedStatement st = con.prepareStatement(
+				"SELECT COUNT(*) FROM MEMBER_INFO "
+				+ "WHERE MAIL_ADDRESS = ?"
+				+ "AND MEMBER_ID != ?");
+		st.setString(1, mail_address);
+		st.setString(2, member_id);
+		ResultSet rs = st.executeQuery();
+		rs.next();
+		int count = rs.getInt("COUNT(*)");
+		
+		st.close();
+		con.close();
+			
+		return count;
+	}
+	
+	public int MM02U01(Member member) throws Exception{
 		
 		Connection con = getConnection();
 
@@ -165,16 +199,16 @@ public int MM01S03(String mail_address) throws Exception {
 				+ "BIRTH_YEAR = ?, BIRTH_MONTH = ?, BIRTH_DAY = ?,"
 				+ "PHONE_NUMBER = ?, MAIL_ADDRESS = ?, JOB = ?"
 				+ "WHERE MEMBER_ID = ?");
-		st.setString(1, last_name);
-		st.setString(2, first_name);
-		st.setString(3, gender);
-		st.setInt(4, Integer.parseInt(birth_year));
-		st.setInt(5, Integer.parseInt(birth_month));
-		st.setInt(6, Integer.parseInt(birth_day));
-		st.setString(7, phone_number);
-		st.setString(8, mail_address);
-		st.setString(9, job);
-		st.setString(10, member_id);
+		st.setString(1, member.getLastName());
+		st.setString(2, member.getFirstName());
+		st.setString(3, member.getGender());
+		st.setInt(4, member.getBirthYear());
+		st.setInt(5, member.getBirthMonth());
+		st.setInt(6, member.getBirthDay());
+		st.setString(7, member.getPhoneNumber());
+		st.setString(8, member.getMailAddress());
+		st.setString(9, member.getJob());
+		st.setString(10, member.getMemberId());
 		int line = st.executeUpdate();
 
 		st.close();

@@ -13,6 +13,7 @@ public class Member implements java.io.Serializable {
 	private String mail_address;
 	private String job;
 	
+	
 	public String getMemberId() {
 		return member_id;
 	}

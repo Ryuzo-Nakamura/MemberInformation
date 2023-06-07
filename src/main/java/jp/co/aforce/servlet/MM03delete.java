@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import jp.co.aforce.constant.Constant.Message;
 import jp.co.aforce.dao.MemberDAO;
+import jp.co.aforce.tool.MemberInfo;
 
 @WebServlet(urlPatterns={"/servlet/MM03delete"})
 public class MM03delete extends HttpServlet {
@@ -33,23 +34,11 @@ public class MM03delete extends HttpServlet {
 			}
 			session.removeAttribute("member_id");
 			session.setAttribute("search_message", "");
-			removeMemberInfo(session);
+			MemberInfo.removeMemberInfo(session);
 			session.setAttribute("delete_message", message);
 			response.sendRedirect("/MemberInformation/views/delete.jsp");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
-	}
-	
-	public void removeMemberInfo(HttpSession session) {
-		session.removeAttribute("last_name");
-		session.removeAttribute("first_name");
-		session.removeAttribute("gender");
-		session.removeAttribute("birth_year");
-		session.removeAttribute("birth_month");
-		session.removeAttribute("birth_day");
-		session.removeAttribute("phone_number");
-		session.removeAttribute("mail_address");
-		session.removeAttribute("job");
 	}
 }
